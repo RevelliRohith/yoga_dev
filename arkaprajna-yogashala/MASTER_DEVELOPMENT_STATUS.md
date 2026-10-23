@@ -1,0 +1,52 @@
+# Arkaprajna Yogashala - project-wide development status
+
+Updated 2026-10-23. This document supersedes historical checkpoints. Detailed evidence, limitations, changed files and acceptance steps: PROJECT_COMPLETION_REPORT.md.
+
+The existing application has been extended; it has not been replaced. Safe implementation and isolated testing are complete for the current master scope. The entire system is **not production-complete**: financial and studio-operations persistence, public collection, trainer invitations, live-session acceptance and deployment remain separately gated. UI presence is not proof of live functionality.
+
+| Module | Implementation status | Evidence and remaining boundary |
+| --- | --- | --- |
+| Admin authentication | Fully implemented and tested for existing scope | SSR login/logout, verified admin authorization, tests; owner previously passed Dashboard/Programs/Batches login checks |
+| Programs and Batches | Fully implemented and tested for existing scope | CRUD, validation, inactive/assignment guards, regression tests and rolled-back synthetic database CRUD; no production records changed |
+| Trainer management | Fully implemented and tested for current management scope | Edit/status/search/assignments; tests; owner reported Stage 3C manual check passed |
+| Secure trainer onboarding | Implemented; blocked by configuration/approval | Invitation/recovery and partial-failure protections tested with mocks; real accounts/invitations/SMTP/redirects remain disabled |
+| Trainer dashboard | Implemented; live acceptance partially complete | Own profile/assigned batches/six-field roster; application and isolated RLS tests; no real active/inactive/cross-trainer sessions |
+| Student management | Core implemented and tested; history activation pending | Registration, immutable codes, edit, enrollment/status/search/filter, safe CSV and fee-ledger link; future history requires operations migration |
+| Financial database | Implemented and isolated-tested; production blocked | Unchanged guarded five-table proposal, 38 groups passed again with supplied broad default ACLs; production not applied |
+| Fee UI, ledger and receipts | Implemented; live integration pending | Exact paise, signed previews, allocations, concessions/reversals, reports/CSV, print/Save as PDF; all live financial capabilities disabled |
+| Public website | Implemented and responsive-tested; content/launch pending | Eight public routes plus event details; no invented contacts/prices/teachers; real content/publication/deployment pending |
+| Trial inquiries | Implemented and isolated-tested; activation blocked | Consent/validation/admin follow-up; deduplication and concurrent durable rate limits; no collection or sending enabled |
+| Events | Implemented and isolated-tested; production persistence blocked | Search/date/visibility filters, draft/edit/publish/withdraw, public projection; image uploads not implemented |
+| Certificates | Implemented and isolated-tested; production issuance blocked | Unsaved draft preview, issue confirmation, immutable unique reference, searchable history, print/browser PDF; approved footer/signatory pending |
+| Manual reminders | Implemented; approved data-source activation pending | Fee dates 8/11/16, inquiry/event/payment drafts, copy only; no sending integration |
+| Dashboard and reports | Implemented; some sources gated | Real counts or unavailable, student/financial exports, operational CSV and outcome summaries; no fake performance metrics |
+| Studio settings | Implemented and isolated-tested; production persistence blocked | Approved contact/content/logo URL/linked active teachers/document footers; Storage uploads absent |
+| Security and QA | Automated/local scope complete; live acceptance pending | 85 application tests, 38 financial and 19 operations database groups; lint/TypeScript/build and browser checks recorded in completion report |
+| Deployment and handover | Preparation complete; deployment not started | Environment/Auth/backup/operation/recovery checklists; no hosting purchase, DNS change or release |
+| Optional uploads/gallery | Not implemented | No approved bucket/assets/consent; not required for current text/URL workflows |
+| Razorpay, automatic messaging, student login, attendance | Not started / intentionally excluded | Not approved in master scope; gateway stays disabled |
+
+## Independent work completed in this continuation
+
+Added event search/date/visibility controls, certificate draft review and searchable history, operational CSV exports, strict real-calendar India event validation, narrow public DTOs, safe provider-error handling, scoped operational loading and active-trainer publication validation. Added 14 meaningful application tests and a 19-group isolated operations suite. Fixed incomplete settings normalization and unavailable event-history presentation. Existing module behavior/security was retained.
+
+## Database and security gates
+
+Target expected Supabase reference remains ogzdhmptzeyinhgxcgii. It was not contacted for these isolated tests. Prior grant hardening and trainer migrations must never be rerun.
+
+Financial SHA-256: b6d596e86286abec19a4ff37970a05dd4c472debce10af19ae2d58279c474d23.
+Operations SHA-256: 71f072d0e00c064a8ed009e2fec56299461ccb775ce9e02a84271f6d9ae73a3f.
+
+The complete API-surface snapshot has already been validated. The remaining exposure evidence is the **actual current Dashboard Data API exposed-schema list**, which was supplied as a placeholder. No repeat export is required merely to replace that missing list. See PHASE_5_PRODUCTION_READINESS.md: production financial execution remains NO-GO pending that evidence and separate explicit approval.
+
+The independent operations proposal passed actual disposable PostgreSQL tests, not only syntax parsing. It still needs separate production approval, before/after verification and explicit activation. Public inquiry EXECUTE is a further separate gate. See STUDIO_OPERATIONS_DATABASE_REVIEW.md and STUDIO_OPERATIONS_ISOLATED_TEST_REPORT.md.
+
+## Remaining actions requiring access or approval
+
+1. Confirm current Data API exposed schemas, current project/role, restricted backup and final financial migration approval. Do not execute any proposal as a batch.
+2. Separately approve the independent operations migration and controlled hosted integration fixtures. Then verify catalogs and decide read/write/public-content activation; public inquiry collection also needs privacy/retention/abuse review.
+3. Approve secure trainer Auth/SMTP/redirect configuration and controlled recipients/accounts; test real active/inactive/cross-trainer sessions afterward.
+4. Supply approved studio contacts, location, program/teacher introductions, assets and document footer/signatory content through the activated settings workflow.
+5. Complete authenticated new-module browser acceptance, print/PDF acceptance, backup rehearsal and dependency review; separately approve hosting/deployment.
+
+No production SQL, production records, Auth settings, accounts, invitations, real financial operations, notifications or deployment were performed. No new phase prompt is needed; unresolved access/approval gates are the remaining dependencies, not a reason to rebuild completed code.

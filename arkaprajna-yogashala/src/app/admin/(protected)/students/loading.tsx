@@ -1,0 +1,1 @@
+export default function LoadingStudents() { return <section className="management-empty" role="status"><h2>Preparing student records…</h2><p>Checking your administrator access and enrollment details.</p></section>; }

@@ -1,5 +1,7 @@
 # Module 3: combined SQL review and proposed runbook
 
+> Current stage update: the user has confirmed grant hardening was applied, effective privilege checks passed, and Admin/Programs/Batches still load. Do not rerun that completed migration. The GraphQL inspection also completed: pg_graphql is absent and the exposed wrapper is an invoker error-only placeholder. The historical approval/order notes below are superseded by `MODULE_3_STAGE_3A.md` for the current next step. Trainer-access execution and account creation remain unapproved.
+
 **Approval status:** roster fields, inactive-trainer blocking, and grant hardening are approved in principle only. Database execution, migrations, permission changes, Auth configuration, and account creation remain unapproved. None of the SQL in this runbook has been executed by the agent. All steps below are a future sequence for separate explicit approval, not an instruction to run them now.
 
 ## Combined findings

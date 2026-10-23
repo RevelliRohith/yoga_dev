@@ -144,10 +144,13 @@ export async function loadOverviewCounts() {
       db.from("programs").select("id", { count: "exact", head: true }).eq("is_active", true),
       db.from("batches").select("id", { count: "exact", head: true }),
       db.from("batches").select("id", { count: "exact", head: true }).eq("is_active", true),
+      db.from("students").select("id", { count: "exact", head: true }),
+      db.from("students").select("id", { count: "exact", head: true }).eq("status", "active"),
+      db.from("profiles").select("id", {count:"exact",head:true}).eq("role","trainer"),
     ]);
     const failure = results.find(result => result.error);
     if (failure) return { data: null, error: databaseError(failure.error, "Studio counts are temporarily unavailable.") };
-    return { data: { programs: results[0].count, activePrograms: results[1].count, batches: results[2].count, activeBatches: results[3].count }, error: "" };
+    return { data: { programs: results[0].count, activePrograms: results[1].count, batches: results[2].count, activeBatches: results[3].count, students: results[4].count, activeStudents: results[5].count, trainers: results[6].count }, error: "" };
   } catch {
     return { data: null, error: "Studio counts are temporarily unavailable. Please refresh." };
   }

@@ -1,0 +1,13 @@
+# Outstanding approvals - independent scopes
+
+Updated 2026-10-23. Safe application work and local tests have continued; do not bundle the remaining production/configuration gates.
+
+1. **Financial production review:** provide the actual current Dashboard Data API exposed-schema names. The complete capture is already validated; no repeat whole export is needed for that missing field. Review final readiness, live project ogzdhmptzeyinhgxcgii/postgres and backup, then separately approve only phase_5_financial.proposed.sql, SHA-256 b6d596e86286abec19a4ff37970a05dd4c472debce10af19ae2d58279c474d23. Production execution remains NO-GO until then.
+2. **Financial activation and controlled fixtures:** separate approval for hosted read/API testing, server-only preview-signing configuration, minimal fictional fixtures and write activation. Real financial records/refunds are not authorized by a schema approval. Razorpay stays disabled.
+3. **Independent studio operations production migration:** 19 disposable PostgreSQL test groups now passed; isolated testing is complete. Review studio_operations.proposed.sql, SHA-256 71f072d0e00c064a8ed009e2fec56299461ccb775ce9e02a84271f6d9ae73a3f, verification/recovery and enrollment-history trigger. Separately approve production execution and controlled integration/activation. Financial migration approval does not include it.
+4. **Public content/inquiries:** confirm actual contacts/location/programs/teacher publication permission, privacy/retention/deletion and abuse controls. Inquiry EXECUTE activation is separate from the operations migration. No sending is included.
+5. **Trainer activation:** approve server credential/Auth URLs/signup/template/SMTP configuration and exact controlled recipients/fixtures. Then complete actual active/inactive/cross-trainer sessions. No accounts or invitations without approval.
+6. **Assets and documents:** approved logo/teacher/event assets and consent, receipt/certificate footer/signatory, print/PDF acceptance. Optional Storage uploads require bucket/policy/type/size review; they are not implemented or enabled.
+7. **Launch:** complete authenticated hosted acceptance, dependency/advisory review, restricted backup/restore plan and commercial hosting/domain decision. Explicit approval before purchase, DNS change or public deployment.
+
+No migration, production record, external configuration, account, financial action, notification or deployment was performed. No new phase prompt is required; these are the remaining access and approval dependencies. See PROJECT_COMPLETION_REPORT.md for the full implementation/test matrix.

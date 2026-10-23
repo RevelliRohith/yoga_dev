@@ -74,10 +74,13 @@ export async function saveBatch(_previous: SaveState, data: FormData): Promise<S
       error: "Please select an available program.", fieldErrors: { program_id: "Choose an active program. An existing batch may retain its current inactive program." },
     };
     if (input.values.trainer_id) {
-      const { data: trainer, error: trainerError } = await db.from("profiles").select("id").eq("id", input.values.trainer_id).eq("role", "trainer").maybeSingle();
+      let trainerQuery = db.from("profiles").select("id").eq("id", input.values.trainer_id).eq("role", "trainer");
+      // Preserve existing inactive assignments, but reject new inactive assignments.
+      if (current?.trainer_id !== input.values.trainer_id) trainerQuery = trainerQuery.eq("is_active", true);
+      const { data: trainer, error: trainerError } = await trainerQuery.maybeSingle();
       if (trainerError) return failure(databaseError(trainerError));
       if (!trainer) return {
-        error: "Please select an available trainer.", fieldErrors: { trainer_id: "This profile is not an available trainer. Select another trainer or leave it unassigned." },
+        error: "Please select an available trainer.", fieldErrors: { trainer_id: "Choose an active trainer or leave this batch unassigned. Existing assignments may retain their inactive trainer." },
       };
     }
     if (!current) {

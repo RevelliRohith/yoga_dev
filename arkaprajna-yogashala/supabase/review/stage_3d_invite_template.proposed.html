@@ -1,0 +1,11 @@
+<!-- PROPOSAL ONLY: not applied. Requires approval for Auth template settings.
+     Change the exact origin below to the approved APP_SITE_URL before production use.
+     The fallback preserves other invitation workflows. -->
+<h2>Your invitation to Arkaprajna Yogashala</h2>
+<p>Your studio administrator has invited you to set up your trainer account.</p>
+{{ if eq .RedirectTo "http://localhost:3000/auth/trainer/confirm" }}
+<p><a href="{{ .RedirectTo }}#token_hash={{ .TokenHash }}&amp;type=invite">Continue to choose your password</a></p>
+{{ else }}
+<p><a href="{{ .ConfirmationURL }}">Accept invitation</a></p>
+{{ end }}
+<p>If you did not expect this invitation, contact the studio administrator.</p>

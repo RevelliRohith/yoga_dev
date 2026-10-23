@@ -43,7 +43,7 @@ function form(values = {}, kind = "program") {
 }
 
 // Use the real PostgREST query builder with an in-memory HTTP transport. No live writes.
-function harness({ unauthorized = false, activeProgram = true, trainerRole = "trainer", currentProgram = program, currentBatch = batch, updateRows = true, databaseDenied = false } = {}) {
+function harness({ unauthorized = false, activeProgram = true, activeTrainer = true, trainerRole = "trainer", currentProgram = program, currentBatch = batch, updateRows = true, databaseDenied = false } = {}) {
   const requests = [];
   const saved = new Map();
   let authorized = false;
@@ -70,7 +70,7 @@ function harness({ unauthorized = false, activeProgram = true, trainerRole = "tr
           assert.equal(url.searchParams.get("role"), "eq.trainer");
           const columns = url.searchParams.get("select");
           assert.ok(["id", "id,full_name"].includes(columns));
-          return respond(trainerRole === "trainer" ? [{ id: trainerId, ...(columns === "id,full_name" ? { full_name: "Fixture Teacher" } : {}) }] : []);
+          return respond(trainerRole === "trainer" && (activeTrainer || url.searchParams.get("is_active") !== "eq.true") ? [{ id: trainerId, ...(columns === "id,full_name" ? { full_name: "Fixture Teacher" } : {}) }] : []);
         }
       }
       if (method === "POST") {
@@ -196,8 +196,9 @@ test("assigned trainers are verified on save and repeated batch submissions cann
 test("dashboard counts come from count queries and failures are never converted to zero", async () => {
   const h = harness();
   const result = await h.loadOverviewCounts();
-  assert.equal(JSON.stringify(result.data), JSON.stringify({ programs: 7, activePrograms: 5, batches: 9, activeBatches: 4 }));
-  assert.equal(h.requests.filter(request => request.method === "HEAD").length, 4);
+  assert.equal(JSON.stringify(result.data), JSON.stringify({ programs: 7, activePrograms: 5, batches: 9, activeBatches: 4, students: 9, activeStudents: 9, trainers: 9 }));
+  assert.equal(h.requests.filter(request => request.method === "HEAD").length, 7);
+  assert.equal(h.requests.find(r => r.table === "profiles").query.get("role"), "eq.trainer");
   const denied = await harness({ databaseDenied: true }).loadOverviewCounts();
   assert.equal(denied.data, null);
   assert.ok(denied.error);
@@ -219,6 +220,16 @@ test("batch deactivation needs confirmation and concurrent changes do not report
   assert.equal(h.requests.some(request => request.method === "PATCH"), false);
   const racing = harness({ updateRows: false });
   assert.match((await racing.saveBatch({}, form({ ...values, confirm_deactivation: "on" }, "batch"))).error, /changed after/);
+});
+
+test("new inactive-trainer assignments are rejected while existing inactive assignments can be retained", async () => {
+  const h = harness({ activeTrainer: false });
+  const result = await h.saveBatch({}, form({ trainer_id: trainerId }, "batch"));
+  assert.ok(result.fieldErrors.trainer_id);
+  assert.equal(h.requests.some(request => request.method === "POST" || request.method === "PATCH"), false);
+  const current = { ...batch, trainer_id: trainerId };
+  const edit = harness({ activeTrainer: false, currentBatch: current });
+  await assert.rejects(edit.saveBatch({}, form({ mode: "edit", trainer_id: trainerId, version: version(current) }, "batch")), /notice=updated/);
 });
 
 test("database permission errors remain safe and do not claim a successful write", async () => {

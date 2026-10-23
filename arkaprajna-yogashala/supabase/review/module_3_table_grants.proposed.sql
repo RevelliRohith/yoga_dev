@@ -1,4 +1,5 @@
--- REVIEW ONLY: NOT APPLIED. Requires separate explicit approval.
+-- COMPLETED: user confirmed execution and successful post-migration verification.
+-- HISTORICAL REFERENCE ONLY. Do not rerun for the pending trainer-access stage.
 -- Remove unnecessary SQL capabilities from the two application API roles.
 -- Does not execute TRUNCATE, drop tables, remove triggers/FKs, or modify rows.
 -- Existing SELECT/INSERT/UPDATE/DELETE grants, RLS, and role helpers are unchanged.
