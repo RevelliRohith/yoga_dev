@@ -10,6 +10,10 @@ Use the existing project directory and installed Node environment. Install the l
 - Administrator: http://localhost:3000/admin/login
 - Trainer: http://localhost:3000/trainer/login
 
+Local development is pinned to port 3000 by the development script. If another application owns that port, startup fails instead of silently selecting another port. Verify the owning application before stopping it; do not terminate unrelated Node processes.
+
+Start from `D:\code\yoga_dev\arkaprajna-yogashala` and run `npm.cmd run dev`. Reuse the existing Yogashala server if it is running; do not start a second instance.
+
 Existing local Supabase publishable configuration belongs in .env.local. Do not paste keys, passwords or session tokens into issues/chat. Privileged keys must never use NEXT_PUBLIC variables. No student login or attendance module exists.
 
 ## Current scope and activation

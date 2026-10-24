@@ -1,12 +1,15 @@
 import Link from "next/link";
 import { loadFees } from "@/lib/fees/data";
-import { loadStudio } from "@/lib/studio/admin-data";
+import { loadStudio, operationsWrite } from "@/lib/studio/admin-data";
 import { inr } from "@/lib/fees/policy";
 import { indianToday } from "@/lib/admin/students";
 import { ManagementHeading } from "../management-ui";
-import { CopyMessage } from "@/components/copy-message";
+import { ReminderCard } from "./reminder-card";
+import { loadReminderHistory } from "@/lib/studio/reminders";
 export default async function Reminders() {
   const [f, s] = await Promise.all([loadFees(), loadStudio("communications")]);
+  const history = await loadReminderHistory();
+  const tracking = (id: string) => ({ id, handled: history.records.find(r => r.id === id)?.handled || false, enabled: !history.error && operationsWrite() });
   const today = indianToday(),
     day = Number(today.slice(8));
   return (
@@ -15,6 +18,7 @@ export default async function Reminders() {
         title="A considerate follow-up."
         description="Review and copy messages manually. Nothing is sent automatically."
       />
+      {history.error && <p className="admin-alert">{history.error}</p>}
       <section className="management-panel studio-card">
         <h2>Fee reminders</h2>
         {f.error && <p>{f.error}</p>}
@@ -29,7 +33,8 @@ export default async function Reminders() {
           .map((b) => {
             const bill = f.data!.bills.find((x) => x.id === b.id);
             return (
-              <CopyMessage
+              <ReminderCard
+                {...tracking(`fee:${b.id}:${today}`)}
                 key={b.id}
                 text={`Hello ${bill?.student_name_snapshot}, a friendly ${day === 8 ? "upcoming fee" : day === 11 ? "grace-period" : "overdue balance"} reminder for ${b.billing_month.slice(0, 7)}. Outstanding: ${inr(b.outstanding_paise)}. Please contact the studio to review or arrange payment. No late fee applies.`}
               />
@@ -46,7 +51,8 @@ export default async function Reminders() {
           .filter((p) => !p.reversed_at)
           .slice(-10)
           .map((p) => (
-            <CopyMessage
+            <ReminderCard
+              {...tracking(`payment:${p.id}:${p.received_on}`)}
               key={p.id}
               text={`Hello ${p.student_name_snapshot}, the studio has recorded ${inr(p.amount_paise)} by ${p.method} on ${p.received_on}. Receipt ${p.receipt_number}. Allocated months: ${f
                 .data!.allocations.filter((a) => a.payment_id === p.id)
@@ -63,7 +69,8 @@ export default async function Reminders() {
         {s.data?.inquiries
           .filter((i) => ["new", "contacted"].includes(i.status))
           .map((i) => (
-            <CopyMessage
+            <ReminderCard
+              {...tracking(`inquiry:${i.id}:${today}`)}
               key={i.id}
               text={`Hello ${i.full_name}, following up on your inquiry${i.program ? ` about ${i.program}` : ""}. Please let the studio know a convenient time to discuss your class preferences.`}
             />
@@ -74,7 +81,8 @@ export default async function Reminders() {
         {s.data?.events
           .filter((e) => e.published && e.starts_at >= new Date().toISOString())
           .map((e) => (
-            <CopyMessage
+            <ReminderCard
+              {...tracking(`event:${e.id}:${new Date(e.updated_at).toISOString().replaceAll(":", "-")}`)}
               key={e.id}
               text={`${e.title} - ${new Intl.DateTimeFormat("en-IN", { dateStyle: "long", timeStyle: "short", timeZone: "Asia/Kolkata" }).format(new Date(e.starts_at))} IST, ${e.venue}. Contact the studio for details.`}
             />

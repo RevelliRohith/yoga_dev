@@ -1,0 +1,15 @@
+# Independent studio extensions — implementation and approval boundary
+
+This is a separate, unapplied proposal after studio_operations.proposed.sql. It does not depend on finance. Original financial and operations proposals are unchanged.
+
+Implemented: Classic/Minimal certificate selection and immutable studio-name/footer snapshots on new issuance; legacy print warning; explicit safe HTTPS Maps URL with configured-address fallback; manual reminder handled/reopen persistence, actor/time stamps and append-only audit. Reminder records store identifiers/status only, not message/contact copies. Handled never means sent. Copy remains manual.
+
+STUDIO_EXTENSIONS_ENABLED must remain absent/false until separate migration approval, current catalog review and controlled integration acceptance. Existing operations read/write gates also apply. Certificate issuance now additionally requires the extension, preventing new unsnapshotted documents. Draft previews remain available without writes. Maps public projection requires the extension. Existing certificates retain NULL snapshots because historical studio details cannot be reconstructed.
+
+Security: existing requireAdmin and session-bound Supabase client remain authoritative; no service key, role bypass or test-auth switch was added. Reminder SQL is invoker-security with admin RLS. API roles cannot forge actor/time, delete tracking, edit issued certificates or change audit. Public projection adds only maps_url. Anonymous/trainer reminder reads/writes are denied. Recovery proposal quarantines new reminder writes and certificate issuance while preserving records and reads.
+
+Verification: 93 application tests passed; 8 actual disposable PostgreSQL extension groups passed. Lint and production build passed before the final explanatory-print/duplicate-notice cleanup; final type/lint checks recorded in continuation report. Existing financial and operations SQL suites were not rerun in this continuation. Fixed loopback disposable database only; no production SQL/settings changed. Auth is a synthetic stub in SQL tests; hosted PostgREST/JWT behavior is not proven by them.
+
+Browser acceptance: existing authenticated administrator session at localhost:3000; all seven modules inspected read-only. Minimal unsaved certificate preview verified with issuance disabled. Enrollment report renders existing counts/assignments. Production persistence, print of an actually issued new certificate, stale writes and full hosted end-to-end acceptance remain blocked by approvals. Image uploads are still not implemented and require separately reviewed Storage/asset scope; URL workflows do not count as uploads.
+
+Migration: supabase/review/studio_extensions.proposed.sql. Recovery: studio_extensions_disable.recovery.proposed.sql. Read-only catalog review: studio_extensions_verify_readonly.sql. Test: scripts/studio-extensions-isolated-test.py, run once against fresh operations fixtures at the hard-coded loopback disposable database. Never point this harness at Supabase.

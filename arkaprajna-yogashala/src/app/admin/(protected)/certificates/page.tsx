@@ -16,7 +16,7 @@ export default async function Certificates() {
       {r.error && <p className="admin-alert">{r.error}</p>}
       <CertificateWorkspace
         records={r.data?.certificates || []}
-        enabled={operationsWrite() && !!r.data}
+        enabled={operationsWrite() && !!r.data && process.env.STUDIO_EXTENSIONS_ENABLED === "true"}
         available={!!r.data}
         settings={r.data?.settings || EMPTY_SETTINGS}
         createId={randomUUID()}

@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { StudioForm } from "../studio-forms";
-import type { Certificate, StudioSettings } from "@/lib/studio/model";
+import { CERTIFICATE_TEMPLATES, type Certificate, type StudioSettings } from "@/lib/studio/model";
 export function CertificateWorkspace({
   records,
   enabled,
@@ -18,6 +18,7 @@ export function CertificateWorkspace({
   settings: StudioSettings;
   available: boolean;
 }) {
+  const [template, setTemplate] = useState<"classic" | "minimal">("classic");
   const [q, setQ] = useState(""),
     [date, setDate] = useState(""),
     [name, setName] = useState(""),
@@ -48,6 +49,11 @@ export function CertificateWorkspace({
             ? "Review the draft before explicitly confirming issuance."
             : "You can review an unsaved draft. Issuance remains disabled until the approved database and write activation are available."}
         </p>
+        <label>Template
+          <select name="template" value={template} onChange={e => { setTemplate(e.target.value as "classic" | "minimal"); setPreview(false); }}>
+            {Object.entries(CERTIFICATE_TEMPLATES).map(([key, label]) => <option key={key} value={key}>{label}</option>)}
+          </select>
+        </label>
         <label>
           Participant name
           <input
@@ -104,7 +110,7 @@ export function CertificateWorkspace({
         </button>
         {preview && (
           <article
-            className="certificate-draft no-print"
+            className={`certificate-draft certificate-${template} no-print`}
             aria-label="Unsaved certificate preview"
           >
             <strong>DRAFT - NOT ISSUED</strong>

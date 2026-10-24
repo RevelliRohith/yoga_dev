@@ -4,6 +4,8 @@ import { requireAdmin } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { operationsWrite } from "@/lib/studio/admin-data";
 import {
+  certificateTemplate,
+  settingsContent,
   settingsFromForm,
   eventValues,
   StudioInputError,
@@ -119,11 +121,20 @@ export async function saveStudio(
         throw new StudioInputError(
           "Check participant, event/program and issue date.",
         );
+      const template = certificateTemplate(t("template") || "classic");
+      if (process.env.STUDIO_EXTENSIONS_ENABLED !== "true")
+        throw new StudioInputError("Certificate issuance awaits the approved snapshot/template extension.");
+      const settingsResult = await db.from("studio_settings").select("content").eq("id", "studio").maybeSingle();
+      if (settingsResult.error) throw new StudioInputError("Studio information is unavailable. Reload before issuing.");
+      const snapshot = settingsContent(settingsResult.data?.content);
       result = await db
         .from("studio_certificates")
         .insert({
           id,
           reference: `AYC-${t("issue_date").slice(0, 4)}-${id.replaceAll("-", "").slice(0, 12).toUpperCase()}`,
+          template,
+          studio_name_snapshot: snapshot.name,
+          footer_snapshot: snapshot.certificate_footer,
           participant_name: t("participant_name"),
           title: t("title"),
           issue_date: t("issue_date"),

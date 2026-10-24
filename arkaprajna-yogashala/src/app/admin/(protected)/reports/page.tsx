@@ -2,9 +2,10 @@ import Link from "next/link";
 import { requireAdmin } from "@/lib/supabase/admin";
 import { ManagementHeading } from "../management-ui";
 import { loadStudio } from "@/lib/studio/admin-data";
+import { loadEnrollmentReport } from "@/lib/admin/enrollment-report";
 export default async function Reports() {
   await requireAdmin();
-  const { data, error } = await loadStudio("reports");
+  const [{ data, error }, enrollment] = await Promise.all([loadStudio("reports"), loadEnrollmentReport()]);
   return (
     <>
       <ManagementHeading
@@ -13,6 +14,20 @@ export default async function Reports() {
       />
       <section className="management-panel studio-card">
         <h2>Enrollment & teaching</h2>
+        {enrollment.error && <p className="admin-notice" role="status">{enrollment.error}</p>}
+        {enrollment.data && <>
+          <p>{enrollment.data.active} active students · {enrollment.data.inactive} inactive students</p>
+          {([['Students by program', enrollment.data.programs], ['Students by batch', enrollment.data.batches]] as const).map(([title, rows]) => (
+            <div key={title} className="management-table-wrap">
+              <table className="management-table">
+                <caption>{title}</caption>
+                <thead><tr><th scope="col">Name</th><th scope="col">Active</th><th scope="col">Inactive</th><th scope="col">Trainer</th></tr></thead>
+                <tbody>{rows.map(row => <tr key={row.id}><th scope="row">{row.name}</th><td>{row.active}</td><td>{row.inactive}</td><td>{'trainer' in row ? row.trainer : '—'}</td></tr>)}</tbody>
+              </table>
+            </div>
+          ))}
+          <p><Link href="/admin/reports/enrollment/export" prefetch={false}>Enrollment and trainer assignments CSV</Link></p>
+        </>}
         <p>
           <Link href="/admin/students">
             Student search, enrollment and status reports

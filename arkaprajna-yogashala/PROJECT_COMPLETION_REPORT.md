@@ -1,6 +1,29 @@
 # Arkaprajna Yogashala - project-wide completion report
 
+## Latest admin continuation (23 October 2026)
+
+See ADMIN_CONTINUATION_2026_10_23.md and STUDIO_EXTENSIONS_REVIEW.md. Added explicit Maps URL, selectable certificate layouts with immutable issue-time studio/footer snapshots, and handled/reopen reminder tracking with administrator RLS/audit. These close three prior implementation gaps; production persistence remains gated. Four new application regression groups: 93 total passed. Eight actual disposable PostgreSQL extension groups passed; lint/build/TypeScript passed within the documented scope. All seven admin routes were inspected in an existing authenticated browser session read-only, including real enrollment reporting and unsaved Minimal certificate preview with issuance disabled.
+
+New independent extension proposal was tested only locally and is NOT applied to Supabase. STUDIO_EXTENSIONS_ENABLED remains absent/false; new issuance and reminder tracking require separate extension approval plus existing operations gates. Original financial/operations proposals unchanged. Financial/operations persistence and full hosted write/print/PDF acceptance remain blocked. Uploads are still not implemented. No production migrations, Data API settings, real payments, notifications or deployment changed. Earlier test totals and missing Maps/templates/reminder statements below are historical, superseded by this entry where applicable.
+
+
 Updated 2026-10-23 after reviewing the repository, MASTER_DEVELOPMENT_STATUS.md and the complete master development prompt.
+
+## Latest continuation: application fixes and final exposure review
+
+The newly supplied master prompt was read and the prior implementation/status reviewed. Added program/batch enrollment summaries, active/inactive totals, trainer assignments and a private CSV export using existing tables. Added configured-address Maps search and corrected Indian WhatsApp links. Four new regression tests cover contact normalization, paginated/least-data report reads, authorization/incomplete-source failures and formula-safe CSV. Application test total is now **89 passed, 0 failed**; ESLint and the latest production build passed, including the new export route. Local homepage and contact HTTP checks returned 200; these are not visual acceptance tests.
+
+| Changed area | Implementation status | Tests performed / result | Remaining dependencies / approval |
+| --- | --- | --- | --- |
+| Enrollment report and CSV | Implemented using existing schema | Mock tests PASS: pagination, grouping, active/inactive, unassigned, trainer role scope, authorization before DB, partial reads, CSV escaping | Authenticated browser/hosted acceptance UNTESTED; no migration needed |
+| Contact links | Implemented with configured address and normalized Indian mobile | Unit tests PASS: country code variants, invalid mobile, encoded address, missing address | Actual content and visual acceptance pending; separate Maps URL field absent |
+| Financial alternate-access review | Complete against owner confirmation and saved catalog/proposal | Current migration checksum matches saved 38-group evidence; SQL suites NOT rerun here | Conditional GO for approval review; current catalog/project/backup confirmation and separate execution approval required |
+| Production settings/permissions/migration | Unchanged | No live mutation attempted | Recommend automatic table exposure disablement with separate approval; no implicit approval |
+| New UI visual QA | UNTESTED in this continuation | Computer-use inventory returned no apps/browsers | Available browser/authenticated session required; prior screenshots do not verify new UI |
+
+The owner confirmed `graphql_public`, `public` (2 of 2); functions indicator 2 of 4; automatic exposure enabled; extra search path `public`, `extensions`. PHASE_5_PRODUCTION_READINESS.md now contains the final role/surface matrix, default-grant risks, hardening recommendation and current GO/NO-GO decision. No hosted JWT/REST/RPC/GraphQL claim is made from the synthetic test evidence.
+
+The earlier safe-work-complete statement below is a historical checkpoint, not full satisfaction of every requirement in the latest master prompt. Explicit remaining implementation gaps include uploads, a separately configurable map URL, persisted handled-reminder tracking and selectable certificate templates. Those features are not completed by existing URL/text/print workflows. Production activation, live acceptance, approved content and deployment remain blocked separately. No unrelated project was modified.
 
 ## Overall result
 

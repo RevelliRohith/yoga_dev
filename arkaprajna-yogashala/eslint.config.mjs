@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Disposable database tools and captured evidence are not application source.
+    "supabase/review/baselines/**",
   ]),
 ]);
 

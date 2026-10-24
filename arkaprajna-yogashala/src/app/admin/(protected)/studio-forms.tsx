@@ -71,6 +71,7 @@ export function SettingsFields({
           ["email", "Public email"],
           ["address", "Public address"],
           ["whatsapp", "WhatsApp number (optional)"],
+          ["maps_url", "Google Maps or directions link (HTTPS, optional)"],
           ["social_url", "Public social link (HTTPS)"],
           ["logo_url", "Approved logo URL (HTTPS, no upload)"],
           ["receipt_footer", "Receipt footer"],

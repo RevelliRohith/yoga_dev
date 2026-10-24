@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { publicContent } from "@/lib/studio/public-data";
+import { studioContactLinks } from "@/lib/studio/model";
 export const metadata = { title: "Contact | Arkaprajna Yogashala" };
 export default async function Contact() {
   const { settings: s } = await publicContent();
+  const links = studioContactLinks(s);
   return (
     <section className="public-section">
       <p className="public-eyebrow">LET&rsquo;S CONNECT</p>
@@ -16,10 +18,16 @@ export default async function Contact() {
           </p>
           {s.phone && <p>{s.phone}</p>}
           {s.email && <p>{s.email}</p>}
-          {s.whatsapp &&
-            /^\+?\d{10,13}$/.test(s.whatsapp.replace(/\s/g, "")) && (
+          {links.maps && (
+            <p>
+              <a href={links.maps} target="_blank" rel="noopener noreferrer">
+                Find the studio on Google Maps
+              </a>
+            </p>
+          )}
+          {links.whatsapp && (
               <a
-                href={`https://wa.me/${s.whatsapp.replace(/\D/g, "")}`}
+                href={links.whatsapp}
                 target="_blank"
                 rel="noopener noreferrer"
               >

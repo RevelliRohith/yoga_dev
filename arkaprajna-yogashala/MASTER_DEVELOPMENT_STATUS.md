@@ -1,6 +1,24 @@
 # Arkaprajna Yogashala - project-wide development status
 
+## Latest admin continuation (23 October 2026)
+
+See ADMIN_CONTINUATION_2026_10_23.md and STUDIO_EXTENSIONS_REVIEW.md. Added explicit Maps URL, selectable certificate layouts with immutable issue-time studio/footer snapshots, and handled/reopen reminder tracking with administrator RLS/audit. These close three prior implementation gaps; production persistence remains gated. Four new application regression groups: 93 total passed. Eight actual disposable PostgreSQL extension groups passed; lint/build/TypeScript passed within the documented scope. All seven admin routes were inspected in an existing authenticated browser session read-only, including real enrollment reporting and unsaved Minimal certificate preview with issuance disabled.
+
+New independent extension proposal was tested only locally and is NOT applied to Supabase. STUDIO_EXTENSIONS_ENABLED remains absent/false; new issuance and reminder tracking require separate extension approval plus existing operations gates. Original financial/operations proposals unchanged. Financial/operations persistence and full hosted write/print/PDF acceptance remain blocked. Uploads are still not implemented. No production migrations, Data API settings, real payments, notifications or deployment changed. Earlier test totals and missing Maps/templates/reminder statements below are historical, superseded by this entry where applicable.
+
+
 Updated 2026-10-23. This document supersedes historical checkpoints. Detailed evidence, limitations, changed files and acceptance steps: PROJECT_COMPLETION_REPORT.md.
+
+## Latest master-prompt continuation and Dashboard review
+
+- Added a real administrator-only enrollment summary by program/batch, active/inactive totals and trainer assignments, plus CSV export at `/admin/reports/enrollment/export`. Reads the existing schema with pagination and no student contact/guardian fields; errors or incomplete references suppress totals.
+- Fixed WhatsApp links for ten-digit Indian numbers; settings now normalize accepted numbers to +91. Contact Maps search uses the configured address and is absent when no address is configured. A separately configurable map URL is still not implemented.
+- Excluded ignored disposable database tools/evidence from application ESLint traversal; application lint rules remain enabled.
+- Latest application suite: **89 passed, 0 failed**. ESLint passed. Final production build and current acceptance evidence are recorded in PROJECT_COMPLETION_REPORT.md.
+- Dashboard exposure evidence is now resolved; the unchanged financial proposal has conditional GO for final approval review, not execution. No production SQL/settings/permissions changed.
+- No browser was available in the current computer-use inventory, so the new Reports UI and contact changes have **not** been visually verified in this continuation. Earlier screenshot evidence applies only to the earlier code. Live authenticated reporting and production integration remain untested.
+
+The earlier completion language below describes the prior checkpoint, not full acceptance of the newly supplied master prompt. Image uploads, separate Maps URL configuration, persistent handled-reminder tracking and selectable certificate templates remain implementation gaps. Storage/persistence activation and actual assets/business content remain separate approval dependencies. Do not report those gaps as completed merely because the existing text/URL/print workflows are implemented.
 
 The existing application has been extended; it has not been replaced. Safe implementation and isolated testing are complete for the current master scope. The entire system is **not production-complete**: financial and studio-operations persistence, public collection, trainer invitations, live-session acceptance and deployment remain separately gated. UI presence is not proof of live functionality.
 
@@ -37,13 +55,13 @@ Target expected Supabase reference remains ogzdhmptzeyinhgxcgii. It was not cont
 Financial SHA-256: b6d596e86286abec19a4ff37970a05dd4c472debce10af19ae2d58279c474d23.
 Operations SHA-256: 71f072d0e00c064a8ed009e2fec56299461ccb775ce9e02a84271f6d9ae73a3f.
 
-The complete API-surface snapshot has already been validated. The remaining exposure evidence is the **actual current Dashboard Data API exposed-schema list**, which was supplied as a placeholder. No repeat export is required merely to replace that missing list. See PHASE_5_PRODUCTION_READINESS.md: production financial execution remains NO-GO pending that evidence and separate explicit approval.
+The owner has now confirmed Dashboard exposed schemas `graphql_public`, `public`; functions indicator 2 of 4; automatic table exposure enabled; extra search path `public`, `extensions`. The alternate-access review finds no demonstrated financial bypass in the saved model and unchanged proposal. Recommend disabling automatic table exposure with separate approval; it does not replace explicit grants/RLS. See PHASE_5_PRODUCTION_READINESS.md: conditional GO for final approval review, NO-GO for production execution pending current catalog/project/backup checks and separate explicit approval. No production setting was changed.
 
 The independent operations proposal passed actual disposable PostgreSQL tests, not only syntax parsing. It still needs separate production approval, before/after verification and explicit activation. Public inquiry EXECUTE is a further separate gate. See STUDIO_OPERATIONS_DATABASE_REVIEW.md and STUDIO_OPERATIONS_ISOLATED_TEST_REPORT.md.
 
 ## Remaining actions requiring access or approval
 
-1. Confirm current Data API exposed schemas, current project/role, restricted backup and final financial migration approval. Do not execute any proposal as a batch.
+1. Reconfirm current project/role/catalog, restricted backup/recovery readiness, the recommended automatic-exposure decision and final financial migration approval. Exposed schemas are now owner-confirmed. Do not execute proposals as a batch.
 2. Separately approve the independent operations migration and controlled hosted integration fixtures. Then verify catalogs and decide read/write/public-content activation; public inquiry collection also needs privacy/retention/abuse review.
 3. Approve secure trainer Auth/SMTP/redirect configuration and controlled recipients/accounts; test real active/inactive/cross-trainer sessions afterward.
 4. Supply approved studio contacts, location, program/teacher introductions, assets and document footer/signatory content through the activated settings workflow.

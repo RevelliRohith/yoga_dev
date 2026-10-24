@@ -16,15 +16,16 @@ export default async function Certificate({
   return (
     <>
       <PrintButton />
-      <article className="print-document certificate">
-        <p className="admin-eyebrow">{r.data.settings.name}</p>
+      {c.studio_name_snapshot == null && <p className="admin-notice no-print">Legacy certificate: original studio details were not saved. This print uses current studio details.</p>}
+      <article className={`print-document certificate certificate-${c.template || "classic"}`}>
+        <p className="admin-eyebrow">{c.studio_name_snapshot ?? r.data.settings.name}</p>
         <h1>Certificate of participation</h1>
         <p>Presented to</p>
         <h2>{c.participant_name}</h2>
         <p>For participation in</p>
         <h3>{c.title}</h3>
         <p>Issued {c.issue_date}</p>
-        <p>{r.data.settings.certificate_footer}</p>
+        <p>{c.footer_snapshot ?? r.data.settings.certificate_footer}</p>
         <small>Studio reference {c.reference}</small>
       </article>
     </>

@@ -12,6 +12,7 @@ export type StudioSettings = {
   certificate_footer: string;
   social_url: string;
   logo_url: string;
+  maps_url?: string;
   programs: { name: string; description: string; audience: string }[];
   trainers: {
     profile_id?: string;
@@ -33,6 +34,7 @@ export const EMPTY_SETTINGS: StudioSettings = {
   certificate_footer: "",
   social_url: "",
   logo_url: "",
+  maps_url: "",
   programs: [],
   trainers: [],
 };
@@ -60,11 +62,19 @@ export type Inquiry = {
 export type Certificate = {
   id: string;
   reference: string;
+  template?: "classic" | "minimal";
+  studio_name_snapshot?: string | null;
+  footer_snapshot?: string | null;
   participant_name: string;
   title: string;
   issue_date: string;
   created_at: string;
 };
+export const CERTIFICATE_TEMPLATES = { classic: "Classic", minimal: "Minimal" } as const;
+export function certificateTemplate(value: string) {
+  if (value !== "classic" && value !== "minimal") throw new StudioInputError("Choose a certificate template.");
+  return value;
+}
 export class StudioInputError extends Error {}
 export type ActionState = { error: string; message: string };
 export const EMPTY_ACTION: ActionState = { error: "", message: "" };
@@ -77,6 +87,16 @@ export function safeHttps(value: string) {
   } catch {
     return "";
   }
+}
+export function studioContactLinks(settings: Pick<StudioSettings, "whatsapp" | "address" | "maps_url">) {
+  const mobile = mobileNumber(settings.whatsapp);
+  const address = settings.address.trim();
+  return {
+    whatsapp: mobile ? `https://wa.me/${mobile.slice(1)}` : "",
+    maps: safeHttps(settings.maps_url || "") || (address
+      ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`
+      : ""),
+  };
 }
 export function validateInquiry(form: FormData) {
   const text = (k: string) => String(form.get(k) || "").trim();
@@ -127,6 +147,7 @@ export function settingsFromForm(form: FormData): StudioSettings {
     "certificate_footer",
     "social_url",
     "logo_url",
+    "maps_url",
   ] as const) {
     const value = String(form.get(key) || "").trim();
     if (value.length > 2000)
@@ -139,7 +160,8 @@ export function settingsFromForm(form: FormData): StudioSettings {
     throw new StudioInputError("Check the contact email.");
   if (result.whatsapp && !mobileNumber(result.whatsapp))
     throw new StudioInputError("Use an Indian mobile number for WhatsApp.");
-  for (const k of ["social_url", "logo_url"] as const)
+  if (result.whatsapp) result.whatsapp = mobileNumber(result.whatsapp)!;
+  for (const k of ["social_url", "logo_url", "maps_url"] as const)
     if (result[k] && !safeHttps(result[k]))
       throw new StudioInputError(
         "Public links must be HTTPS URLs without credentials.",
@@ -236,12 +258,14 @@ export function settingsContent(
     "certificate_footer",
     "social_url",
     "logo_url",
+    "maps_url",
   ] as const)
     if (typeof raw[key] === "string")
       result[key] = (raw[key] as string).slice(0, 2000);
   if (!result.name.trim()) result.name = EMPTY_SETTINGS.name;
   result.social_url = safeHttps(result.social_url);
   result.logo_url = safeHttps(result.logo_url);
+  result.maps_url = safeHttps(result.maps_url || "");
   if (Array.isArray(raw.programs))
     for (const row of raw.programs.slice(0, 30)) {
       if (
